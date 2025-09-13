@@ -31,8 +31,8 @@ export default function CategoryPage({
       'few-shot': '/builder/few-shot',
       'structured-output': '/builder/structured-output',
       'chain-of-thought': '/builder/chain-of-thought',
-      'zero-shot': categoryId === 'coding' ? '/coding/zero-shot' : '/builder/zero-shot',
-      'reflexion': categoryId === 'coding' ? '/coding/reflexion' : '/builder/reflexion'
+      'zero-shot': '/coding/zero-shot',
+      'reflexion': '/coding/reflexion'
     }
     
     const route = builderRoutes[techniqueId]

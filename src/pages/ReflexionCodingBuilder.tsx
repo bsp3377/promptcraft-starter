@@ -8,24 +8,21 @@ import { enhanceField, polishFinalPrompt } from '../lib/gemini'
 
 const REFLEXION_CODING_TEMPLATE = `Role (optional): {{Role}}
 Task: {{Task}}
-Refinement criteria: {{CriteriaList}}
-Problem / scenario: {{ScenarioOrInput}}
+Refinement criteria: "{{Criteria}}"
+Problem / scenario: "{{Scenario}}"
 
-Final reflexion coding prompt:
-- Act as {{RoleOrDefault}}.
-- First, produce an initial solution to the coding task.
-- Then, perform a self-critique focusing on the selected criteria: {{CriteriaList}}.
-- Finally, deliver an improved solution that addresses the critique.
-- Keep responses structured and concise.`
+Final reflexion prompt:
+Act as a {{RoleOrDefault}}.
+First, produce an initial answer to the task. Then perform a concise self-critique focusing on: {{Criteria}}.
+Finally, deliver an improved answer that addresses the critique. Keep responses structured and concise.`
 
-const CODING_CRITIQUE_OPTIONS = ['performance', 'security', 'readability', 'maintainability', 'error-handling', 'testing', 'documentation', 'best-practices']
+const CRITERIA_OPTIONS = ['clarity', 'accuracy', 'tone', 'persuasiveness', 'correctness', 'creativity']
 
 export default function ReflexionCodingBuilder() {
   const navigate = useNavigate()
   const [role, setRole] = useState('')
   const [task, setTask] = useState('')
   const [criteria, setCriteria] = useState('')
-  const [selectedChips, setSelectedChips] = useState<string[]>([])
   const [scenario, setScenario] = useState('')
   const [preview, setPreview] = useState('')
   const [loading, setLoading] = useState<{[k:string]:boolean}>({})
@@ -40,28 +37,17 @@ export default function ReflexionCodingBuilder() {
     }
   }
 
-  const handleChipToggle = (chip: string) => {
-    setSelectedChips(prev => 
-      prev.includes(chip) 
-        ? prev.filter(c => c !== chip)
-        : [...prev, chip]
-    )
-  }
-
   const onGenerate = async () => {
-    if (!task.trim() || (!criteria.trim() && selectedChips.length === 0) || !scenario.trim()) return
+    if (!task.trim() || !criteria.trim() || !scenario.trim()) return
 
     setLoading((s)=>({...s, generate: true}));
     try {
-      const allCriteria = [...selectedChips, ...(criteria ? [criteria] : [])].join(', ')
-      const roleOrDefault = role.trim() || 'a senior code reviewer'
-      
       const compiled = REFLEXION_CODING_TEMPLATE
-        .replaceAll('{{Role}}', role || '(not specified)')
+        .replaceAll('{{Role}}', role)
         .replaceAll('{{Task}}', task)
-        .replaceAll('{{CriteriaList}}', allCriteria || 'code quality and best practices')
-        .replaceAll('{{ScenarioOrInput}}', scenario)
-        .replaceAll('{{RoleOrDefault}}', roleOrDefault)
+        .replaceAll('{{Criteria}}', criteria)
+        .replaceAll('{{Scenario}}', scenario)
+        .replaceAll('{{RoleOrDefault}}', role.trim() ? role : 'code reviewer/editor')
 
       const finalText = await polishFinalPrompt(compiled)
       setPreview(finalText)
@@ -72,7 +58,7 @@ export default function ReflexionCodingBuilder() {
     }
   }
 
-  const canGenerate = task.trim() && (criteria.trim() || selectedChips.length > 0) && scenario.trim()
+  const canGenerate = task.trim() && criteria.trim() && scenario.trim()
 
   return (
     <div>
@@ -84,17 +70,15 @@ export default function ReflexionCodingBuilder() {
             className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Coding Assistant
+            Back to Coding Assistance
           </button>
         </div>
 
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Reflexion Coding Builder
-          </h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-2">Reflexion Prompt Builder</h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Guide AI to generate → critique → improve code solutions. Fill in each field and let AI enhance your input.
+            Guide AI to generate → critique → improve answers. Fill each field and let AI enhance your input.
           </p>
         </div>
 
@@ -104,78 +88,67 @@ export default function ReflexionCodingBuilder() {
             <h2 className="text-xl font-semibold text-gray-900 mb-6">Fill in the details</h2>
 
             <InputCard
-              label="Who should the AI act as? (Optional)"
-              placeholder="e.g., 'Senior Code Reviewer' / 'Security Expert' / 'Performance Engineer' / 'Tech Lead'"
+              label="Who should the AI act as?"
+              placeholder={`e.g., "Code Reviewer" / "Essay Editor" / "Business Consultant" / "Research Analyst"`}
               value={role}
               onChange={setRole}
               onEnhance={() => onEnhance('Role', role, setRole)}
-              helpText="Set a role to guide coding expertise and review standards."
+              helpText="Set a role to guide tone and critique expertise, or leave blank."
               loading={loading['Role']}
             />
 
             <InputCard
-              label="What coding task should the AI complete and improve?"
-              placeholder={`- "Write a Python function to process user data, then critique and improve it."
-- "Create a React component for data visualization, review it, and optimize."
-- "Implement a sorting algorithm, analyze performance, and enhance it."
-- "Build a REST API endpoint, check security, and refactor."`}
+              label="What should the AI do?"
+              placeholder={`- "Write an ad copy, critique it, and rewrite it for better clarity."\n- "Debug code, identify issues, and provide a fixed version."\n- "Propose a business strategy, then refine after self-review."`}
               value={task}
               onChange={setTask}
               onEnhance={() => onEnhance('Task', task, setTask)}
-              helpText="Describe the full coding workflow: generate → critique → improve."
-              multiline
+              helpText="Describe the full Reflexion workflow for the task."
               required
               loading={loading['Task']}
             />
 
             <div className="space-y-3">
-              <label className="block text-sm font-medium text-gray-700">
-                What should the AI focus on while critiquing the code?
-              </label>
+              <label className="block text-sm font-medium text-gray-700">What should the AI focus on while critiquing?</label>
               <div className="flex flex-wrap gap-2 mb-3">
-                {CODING_CRITIQUE_OPTIONS.map((option) => (
+                {CRITERIA_OPTIONS.map((opt) => (
                   <button
-                    key={option}
-                    onClick={() => handleChipToggle(option)}
+                    key={opt}
+                    onClick={() => setCriteria(criteria === opt ? '' : opt)}
                     className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
-                      selectedChips.includes(option)
-                        ? 'bg-primary-600 text-white'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      criteria === opt ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`}
                   >
-                    {option}
+                    {opt}
                   </button>
                 ))}
               </div>
               <div className="flex gap-2">
                 <input
                   type="text"
-                  placeholder="e.g., 'Memory efficiency and scalability' / 'Security vulnerabilities' / 'Code readability and maintainability'"
+                  placeholder={`e.g., "Clarity and conciseness" / "Error-free code" / "Persuasiveness" / "Factual accuracy"`}
                   value={criteria}
                   onChange={(e) => setCriteria(e.target.value)}
                   className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 />
                 <button
-                  onClick={() => onEnhance('Criteria', criteria, setCriteria)}
-                  disabled={loading['Criteria']}
+                  onClick={() => onEnhance('Critique Focus', criteria, setCriteria)}
+                  disabled={loading['Critique Focus']}
                   className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 transition-colors flex items-center gap-2"
                 >
-                  {loading['Criteria'] ? '⏳' : '✨'} Enhance Criteria with AI
+                  {loading['Critique Focus'] ? '⏳' : '✨'} Enhance Criteria with AI
                 </button>
               </div>
-              <p className="text-xs text-gray-500">Pick focus areas or write your own criteria.</p>
+              <p className="text-xs text-gray-500">Pick a focus or write your own criteria.</p>
             </div>
 
             <InputCard
-              label="What code or problem should the AI refine?"
-              placeholder={`- "def process_data(data): return data.sort()"
-- "const fetchUser = async (id) => { return fetch('/api/users/' + id) }"
-- "A buggy Python loop that doesn't handle edge cases."
-- "React component with performance issues."`}
+              label="What input should the AI refine?"
+              placeholder={`e.g.,\n- "4x + 5x = 6x + 0"\n- "Our product is very good and cheap."\n- "A buggy Python loop that doesn't stop."`}
               value={scenario}
               onChange={setScenario}
               onEnhance={() => onEnhance('Scenario', scenario, setScenario)}
-              helpText="Provide the exact code, problem, or scenario to improve."
+              helpText="Provide the exact text, problem, or code to improve."
               multiline
               required
               loading={loading['Scenario']}
@@ -190,9 +163,7 @@ export default function ReflexionCodingBuilder() {
               >
                 ⚡ Generate Final Prompt
               </PrimaryButton>
-              <p className="text-sm text-gray-500 mt-2 text-center">
-                ⓘ You can update fields anytime before generating.
-              </p>
+              <p className="text-sm text-gray-500 mt-2 text-center">You can update fields anytime before generating.</p>
             </div>
           </section>
 
@@ -203,3 +174,5 @@ export default function ReflexionCodingBuilder() {
     </div>
   )
 }
+
+

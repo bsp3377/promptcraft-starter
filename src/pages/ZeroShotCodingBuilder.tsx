@@ -8,17 +8,15 @@ import { enhanceField, polishFinalPrompt } from '../lib/gemini'
 
 const ZERO_SHOT_CODING_TEMPLATE = `Role (optional): {{Role}}
 Task: {{Task}}
-Output style: {{OutputStyle}}
-Problem / scenario (optional): {{Scenario}}
+Output style: "{{Output}}"
+Problem / scenario (optional): "{{Scenario}}"
 
-Final zero-shot coding prompt:
-- Act as {{RoleOrDefault}}.
-- Complete the coding task directly using the specified output style.
-- If context is provided, incorporate it precisely.
-- Do not include examples or extra commentary.
-- Return only what is requested in the output style.`
+Final zero-shot prompt:
+Act as a {{RoleOrDefault}}. Complete the task directly using the specified output style.
+If context is provided, incorporate it precisely. Do not include examples or extra commentary.
+Return only what is requested in the output style.`
 
-const CODING_OUTPUT_STYLES = ['Code Block', 'Function Only', 'Class Definition', 'API Response', 'Documentation']
+const OUTPUT_OPTIONS = ['Code', 'Steps', 'Bullets', 'Table', 'Narrative']
 
 export default function ZeroShotCodingBuilder() {
   const navigate = useNavigate()
@@ -44,13 +42,12 @@ export default function ZeroShotCodingBuilder() {
 
     setLoading((s)=>({...s, generate: true}));
     try {
-      const roleOrDefault = role.trim() || 'a senior software developer'
       const compiled = ZERO_SHOT_CODING_TEMPLATE
-        .replaceAll('{{Role}}', role || '(not specified)')
+        .replaceAll('{{Role}}', role)
         .replaceAll('{{Task}}', task)
-        .replaceAll('{{OutputStyle}}', outputStyle)
-        .replaceAll('{{Scenario}}', scenario || '(not specified)')
-        .replaceAll('{{RoleOrDefault}}', roleOrDefault)
+        .replaceAll('{{Output}}', outputStyle)
+        .replaceAll('{{Scenario}}', scenario)
+        .replaceAll('{{RoleOrDefault}}', role.trim() ? role : 'developer')
 
       const finalText = await polishFinalPrompt(compiled)
       setPreview(finalText)
@@ -63,16 +60,6 @@ export default function ZeroShotCodingBuilder() {
 
   const canGenerate = task.trim() && outputStyle.trim()
 
-  const getStyleChip = () => {
-    const style = outputStyle.toLowerCase()
-    if (style.includes('code block') || style.includes('```')) return 'Code Block'
-    if (style.includes('function')) return 'Function Only'
-    if (style.includes('class')) return 'Class Definition'
-    if (style.includes('api') || style.includes('response')) return 'API Response'
-    if (style.includes('doc') || style.includes('comment')) return 'Documentation'
-    return 'Custom'
-  }
-
   return (
     <div>
       <div className="py-12 max-w-7xl mx-auto px-4 md:px-8">
@@ -83,17 +70,15 @@ export default function ZeroShotCodingBuilder() {
             className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Coding Assistant
+            Back to Coding Assistance
           </button>
         </div>
 
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Zero-Shot Coding Builder
-          </h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-2">Zero-Shot Prompt Builder</h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Ask AI to complete coding tasks directly, without examples. Define role, task, output style, and context. AI will enhance your inputs.
+            Ask AI to complete a coding task directly, without examples. Define role, task, output style, and scenario. AI will enhance your inputs.
           </p>
         </div>
 
@@ -103,53 +88,45 @@ export default function ZeroShotCodingBuilder() {
             <h2 className="text-xl font-semibold text-gray-900 mb-6">Fill in the details</h2>
 
             <InputCard
-              label="Who should the AI act as? (Optional)"
-              placeholder="e.g., 'Python Developer' / 'React Frontend Engineer' / 'DevOps Specialist' / 'Data Scientist'"
+              label="Who should the AI act as?"
+              placeholder={`e.g., "Python Developer" / "Travel Planner" / "Fitness Coach" / "Research Assistant"`}
               value={role}
               onChange={setRole}
               onEnhance={() => onEnhance('Role', role, setRole)}
-              helpText="Set a role to guide coding expertise and best practices."
+              helpText="Set a role to guide tone and domain expertise, or leave blank."
               loading={loading['Role']}
             />
 
             <InputCard
-              label="What coding task should the AI complete?"
-              placeholder={`- "Write a Python function to validate email addresses."
-- "Create a React component for user authentication."
-- "Set up a Docker configuration for a Node.js app."
-- "Write SQL queries to analyze user engagement metrics."`}
+              label="What should the AI do?"
+              placeholder={`- "Write a Python function to check if a number is prime."\n- "Plan a 3-day trip to Rome."\n- "Summarize the article in 3 bullet points."`}
               value={task}
               onChange={setTask}
               onEnhance={() => onEnhance('Task', task, setTask)}
-              helpText="Describe the coding task clearly. No examples needed."
-              multiline
+              helpText="Describe the task plainly. No examples needed."
               required
               loading={loading['Task']}
             />
 
             <div className="space-y-3">
-              <label className="block text-sm font-medium text-gray-700">
-                How should the code be delivered?
-              </label>
+              <label className="block text-sm font-medium text-gray-700">How should the response be delivered?</label>
               <div className="flex flex-wrap gap-2 mb-3">
-                {CODING_OUTPUT_STYLES.map((style) => (
+                {OUTPUT_OPTIONS.map((opt) => (
                   <button
-                    key={style}
-                    onClick={() => setOutputStyle(style)}
+                    key={opt}
+                    onClick={() => setOutputStyle(outputStyle === opt ? '' : opt)}
                     className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
-                      outputStyle === style
-                        ? 'bg-primary-600 text-white'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      outputStyle === opt ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`}
                   >
-                    {style}
+                    {opt}
                   </button>
                 ))}
               </div>
               <div className="flex gap-2">
                 <input
                   type="text"
-                  placeholder="e.g., 'Complete function with error handling' / 'Code block with comments' / 'API response format'"
+                  placeholder={`e.g., "Code only, inside a code block." / "Step-by-step guide." / "Concise bullet list."`}
                   value={outputStyle}
                   onChange={(e) => setOutputStyle(e.target.value)}
                   className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
@@ -162,27 +139,16 @@ export default function ZeroShotCodingBuilder() {
                   {loading['Output Style'] ? '⏳' : '✨'} Enhance Output with AI
                 </button>
               </div>
-              {outputStyle && (
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-gray-500">Style:</span>
-                  <span className="px-2 py-1 bg-primary-100 text-primary-800 rounded-full text-xs font-medium">
-                    {getStyleChip()}
-                  </span>
-                </div>
-              )}
-              <p className="text-xs text-gray-500">Choose a style or specify your own. Options: Code Block, Function Only, Class Definition, API Response, Documentation.</p>
+              <p className="text-xs text-gray-500">Choose a style or specify your own. Options: Code, Steps, Bullets, Table, Narrative.</p>
             </div>
 
             <InputCard
-              label="What context or constraints should the AI consider? (Optional)"
-              placeholder={`- "Use Python 3.9+ and type hints."
-- "Must work with React 18 and TypeScript."
-- "Follow REST API conventions."
-- "Optimize for performance and memory usage."`}
+              label="What data, context, or situation should the AI handle?"
+              placeholder={`e.g.,\n- "Check the number 29 for primality."\n- "The traveler wants budget-friendly recommendations."\n- "A buggy Python loop that doesn't stop."`}
               value={scenario}
               onChange={setScenario}
               onEnhance={() => onEnhance('Scenario', scenario, setScenario)}
-              helpText="Add any technical constraints, frameworks, or specific requirements."
+              helpText="Add any details AI should use when completing the task."
               multiline
               loading={loading['Scenario']}
             />
@@ -196,9 +162,7 @@ export default function ZeroShotCodingBuilder() {
               >
                 ⚡ Generate Final Prompt
               </PrimaryButton>
-              <p className="text-sm text-gray-500 mt-2 text-center">
-                ⓘ You can update fields anytime before generating.
-              </p>
+              <p className="text-sm text-gray-500 mt-2 text-center">You can update fields anytime before generating.</p>
             </div>
           </section>
 
@@ -209,3 +173,5 @@ export default function ZeroShotCodingBuilder() {
     </div>
   )
 }
+
+
