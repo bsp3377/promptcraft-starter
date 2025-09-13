@@ -1,5 +1,5 @@
 const GEMINI_URL =
-  "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent";
+  "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
 
 export async function callGemini({
   systemPrompt,
@@ -29,11 +29,19 @@ export async function callGemini({
   });
 
   if (!res.ok) {
-    throw new Error(`Gemini API error: ${res.status} ${res.statusText}`);
+    const errorData = await res.json().catch(() => ({}));
+    console.error('Gemini API error:', errorData);
+    throw new Error(`Gemini API error: ${res.status} ${res.statusText} - ${errorData.error?.message || 'Unknown error'}`);
   }
 
   const data = await res.json();
-  const text = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+  
+  if (!data.candidates || data.candidates.length === 0) {
+    console.error('No candidates in response:', data);
+    throw new Error('No response generated from Gemini API');
+  }
+  
+  const text = data.candidates[0]?.content?.parts?.[0]?.text ?? "";
   return text.trim();
 }
 

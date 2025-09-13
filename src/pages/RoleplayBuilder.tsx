@@ -27,34 +27,35 @@ export default function RoleplayBuilder() {
   const [outputStyle, setOutputStyle] = useState('')
   const [scenario, setScenario] = useState('')
   const [preview, setPreview] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState<{[k:string]:boolean}>({})
 
-  const handleEnhance = async (fieldLabel: string, value: string, setter: (value: string) => void) => {
+  const onEnhance = async (label: string, value: string, setter: (v:string)=>void) => {
     try {
-      const improved = await enhanceField(fieldLabel, value)
-      setter(improved)
-    } catch (error) {
-      console.error('Enhancement failed:', error)
+      setLoading((s)=>({...s, [label]: true}));
+      const improved = await enhanceField(label, value);
+      setter(improved || value);
+    } finally {
+      setLoading((s)=>({...s, [label]: false}));
     }
   }
 
-  const handleGenerate = async () => {
+  const onGenerate = async () => {
     if (!role.trim() || !task.trim() || !outputStyle.trim()) return
 
-    setLoading(true)
+    setLoading((s)=>({...s, generate: true}));
     try {
       const compiled = ROLEPLAY_TEMPLATE
         .replaceAll('{{Role}}', role)
         .replaceAll('{{Task}}', task)
-        .replaceAll('{{Scenario}}', scenario || 'No specific scenario provided')
+        .replaceAll('{{Scenario}}', scenario)
         .replaceAll('{{OutputStyle}}', outputStyle)
-      
+
       const finalText = await polishFinalPrompt(compiled)
       setPreview(finalText)
     } catch (error) {
       console.error('Generation failed:', error)
     } finally {
-      setLoading(false)
+      setLoading((s)=>({...s, generate: false}));
     }
   }
 
@@ -89,56 +90,60 @@ export default function RoleplayBuilder() {
           <h2 className="text-xl font-semibold text-gray-900 mb-6">Fill in the details</h2>
           
           <InputCard
-            label="Who should the AI act as?"
-            placeholder="e.g., Customer Support Agent / Doctor / Travel Guide"
+            label="Role"
+            placeholder="e.g., Travel Guide"
             value={role}
             onChange={setRole}
-            onEnhance={() => handleEnhance('Role', role, setRole)}
-            helpText="Define the role to set tone and expertise."
+            onEnhance={() => onEnhance('Role', role, setRole)}
+            helpText="Set a clear role to anchor tone and expertise."
             required
+            loading={loading['Role']}
           />
 
           <InputCard
-            label="What is the AI's job?"
-            placeholder="e.g., Answer product questions politely / Explain symptoms and treatments / Suggest travel itineraries"
+            label="Task"
+            placeholder="e.g., Suggest a 5-day Italy travel itinerary."
             value={task}
             onChange={setTask}
-            onEnhance={() => handleEnhance('Task', task, setTask)}
-            helpText="Describe the primary task in one line."
+            onEnhance={() => onEnhance('Task', task, setTask)}
+            helpText="Describe the main objective in one sentence."
             required
+            loading={loading['Task']}
           />
 
           <InputCard
-            label="How should the response be structured?"
-            placeholder="e.g., Polite chat in bullet points / Q&A format / Step-by-step guide"
+            label="Output Style"
+            placeholder="e.g., Step-by-step guide"
             value={outputStyle}
             onChange={setOutputStyle}
-            onEnhance={() => handleEnhance('Output Style', outputStyle, setOutputStyle)}
-            helpText="Specify the format and tone for responses."
+            onEnhance={() => onEnhance('Output Style', outputStyle, setOutputStyle)}
+            helpText="Pick a delivery format to match your audience."
             required
+            loading={loading['Output Style']}
           />
 
           <InputCard
-            label="What situation should the AI handle?"
-            placeholder="e.g., A customer asks for a refund on a damaged product / A patient describes chest pain / A tourist wants a 3-day Paris itinerary"
+            label="Scenario"
+            placeholder="e.g., A traveler wants budget options in Rome."
             value={scenario}
             onChange={setScenario}
-            onEnhance={() => handleEnhance('Scenario', scenario, setScenario)}
-            helpText="Describe the specific situation or context."
+            onEnhance={() => onEnhance('Scenario', scenario, setScenario)}
+            helpText="Provide any constraints, preferences, or examples."
             multiline
+            loading={loading['Scenario']}
           />
 
           <div className="pt-4">
             <PrimaryButton
-              onClick={handleGenerate}
-              disabled={!canGenerate}
-              loading={loading}
+              onClick={onGenerate}
+              disabled={!canGenerate || loading['generate']}
+              loading={loading['generate']}
               className="w-full"
             >
               ⚡ Generate Final Prompt
             </PrimaryButton>
             <p className="text-sm text-gray-500 mt-2 text-center">
-              Enhance will polish grammar and clarity while keeping your intent. Generate produces a complete, structured prompt.
+              You can update fields anytime before generating.
             </p>
           </div>
         </section>
