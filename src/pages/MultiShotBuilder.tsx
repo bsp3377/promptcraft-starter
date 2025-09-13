@@ -4,12 +4,15 @@ import { useNavigate } from 'react-router-dom'
 import InputCard from '../components/InputCard'
 import PreviewPanel from '../components/PreviewPanel'
 import PrimaryButton from '../components/PrimaryButton'
+import ImageUpload from '../components/ImageUpload'
 import { enhanceField, polishFinalPrompt } from '../lib/gemini'
 
 const MULTI_SHOT_TEMPLATE = `Create image prompts using the following examples as reference:
 
 Examples:
 {{Examples}}
+
+{{ImageReference}}
 
 Style Guidelines:
 {{StyleGuidelines}}
@@ -21,13 +24,15 @@ Instructions:
 - Follow the pattern and style demonstrated in the examples
 - Maintain consistency with the provided format
 - Adapt the structure to your specific needs
-- Keep the same level of detail and specificity`
+- Keep the same level of detail and specificity
+{{ImageGuidelines}}`
 
 export default function MultiShotBuilder() {
   const navigate = useNavigate()
   const [examples, setExamples] = useState('')
   const [styleGuidelines, setStyleGuidelines] = useState('')
   const [outputFormat, setOutputFormat] = useState('')
+  const [referenceImage, setReferenceImage] = useState<File | null>(null)
   const [preview, setPreview] = useState('')
   const [loading, setLoading] = useState<{[k:string]:boolean}>({})
 
@@ -46,10 +51,22 @@ export default function MultiShotBuilder() {
 
     setLoading((s)=>({...s, generate: true}));
     try {
+      const imageReference = referenceImage 
+        ? `Reference Image: Use the attached image as a visual reference to understand the style, composition, and visual elements that should be incorporated into the generated prompts.`
+        : ''
+      
+      const imageGuidelines = referenceImage
+        ? `- Use the reference image to inform the style and visual approach
+- Ensure generated prompts align with the reference image's aesthetic
+- Adapt the reference style to match the example patterns provided`
+        : ''
+
       const compiled = MULTI_SHOT_TEMPLATE
         .replaceAll('{{Examples}}', examples)
+        .replaceAll('{{ImageReference}}', imageReference)
         .replaceAll('{{StyleGuidelines}}', styleGuidelines)
         .replaceAll('{{OutputFormat}}', outputFormat)
+        .replaceAll('{{ImageGuidelines}}', imageGuidelines)
 
       const finalText = await polishFinalPrompt(compiled)
       setPreview(finalText)
@@ -126,6 +143,11 @@ Example 3: "Close-up portrait of an elderly woman, soft natural lighting, shallo
               helpText="Specify how you want the final prompts to be formatted."
               required
               loading={loading['Output Format']}
+            />
+
+            <ImageUpload
+              onImageChange={setReferenceImage}
+              currentImage={referenceImage}
             />
 
             <div className="pt-4">

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import InputCard from '../components/InputCard'
 import PreviewPanel from '../components/PreviewPanel'
 import PrimaryButton from '../components/PrimaryButton'
+import ImageUpload from '../components/ImageUpload'
 import { enhanceField, polishFinalPrompt } from '../lib/gemini'
 
 const FORMAT_CONSTRAINED_TEMPLATE = `Create a format-constrained image prompt with the following specifications:
@@ -15,6 +16,8 @@ Lighting: {{Lighting}}
 Style: {{Style}}
 Technical Requirements: {{TechnicalRequirements}}
 
+{{ImageReference}}
+
 Format Constraints:
 {{FormatConstraints}}
 
@@ -25,7 +28,8 @@ Instructions:
 - Follow all format constraints strictly
 - Ensure technical requirements are met
 - Maintain consistency with specified parameters
-- Optimize for the target format and resolution`
+- Optimize for the target format and resolution
+{{ImageGuidelines}}`
 
 export default function FormatConstrainedBuilder() {
   const navigate = useNavigate()
@@ -37,6 +41,7 @@ export default function FormatConstrainedBuilder() {
   const [technicalRequirements, setTechnicalRequirements] = useState('')
   const [formatConstraints, setFormatConstraints] = useState('')
   const [outputGuidelines, setOutputGuidelines] = useState('')
+  const [referenceImage, setReferenceImage] = useState<File | null>(null)
   const [preview, setPreview] = useState('')
   const [loading, setLoading] = useState<{[k:string]:boolean}>({})
 
@@ -55,6 +60,16 @@ export default function FormatConstrainedBuilder() {
 
     setLoading((s)=>({...s, generate: true}));
     try {
+      const imageReference = referenceImage 
+        ? `Reference Image: Use the attached image as a reference for style, composition, and visual elements while maintaining the specified technical constraints and format requirements.`
+        : ''
+      
+      const imageGuidelines = referenceImage
+        ? `- Use the reference image to guide style and composition within the specified constraints
+- Ensure the reference style is adapted to meet all technical requirements
+- Maintain the reference image's visual quality while respecting format limitations`
+        : ''
+
       const compiled = FORMAT_CONSTRAINED_TEMPLATE
         .replaceAll('{{Subject}}', subject)
         .replaceAll('{{Resolution}}', resolution)
@@ -62,8 +77,10 @@ export default function FormatConstrainedBuilder() {
         .replaceAll('{{Lighting}}', lighting)
         .replaceAll('{{Style}}', style)
         .replaceAll('{{TechnicalRequirements}}', technicalRequirements)
+        .replaceAll('{{ImageReference}}', imageReference)
         .replaceAll('{{FormatConstraints}}', formatConstraints)
         .replaceAll('{{OutputGuidelines}}', outputGuidelines)
+        .replaceAll('{{ImageGuidelines}}', imageGuidelines)
 
       const finalText = await polishFinalPrompt(compiled)
       setPreview(finalText)
@@ -188,6 +205,11 @@ export default function FormatConstrainedBuilder() {
               helpText="Add any additional guidelines for the output."
               multiline
               loading={loading['Output Guidelines']}
+            />
+
+            <ImageUpload
+              onImageChange={setReferenceImage}
+              currentImage={referenceImage}
             />
 
             <div className="pt-4">

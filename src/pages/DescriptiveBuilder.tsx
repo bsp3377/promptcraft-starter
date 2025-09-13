@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import InputCard from '../components/InputCard'
 import PreviewPanel from '../components/PreviewPanel'
 import PrimaryButton from '../components/PrimaryButton'
+import ImageUpload from '../components/ImageUpload'
 import { enhanceField, polishFinalPrompt } from '../lib/gemini'
 
 const DESCRIPTIVE_TEMPLATE = `Create a detailed image prompt with the following specifications:
@@ -15,6 +16,8 @@ Lighting: {{Lighting}}
 Mood: {{Mood}}
 Technical Details: {{TechnicalDetails}}
 
+{{ImageReference}}
+
 Additional Context:
 {{AdditionalContext}}
 
@@ -23,7 +26,8 @@ Guidelines:
 - Include artistic style keywords
 - Specify composition and framing
 - Detail lighting and atmosphere
-- Add technical specifications if needed`
+- Add technical specifications if needed
+{{ImageGuidelines}}`
 
 export default function DescriptiveBuilder() {
   const navigate = useNavigate()
@@ -34,6 +38,7 @@ export default function DescriptiveBuilder() {
   const [mood, setMood] = useState('')
   const [technicalDetails, setTechnicalDetails] = useState('')
   const [additionalContext, setAdditionalContext] = useState('')
+  const [referenceImage, setReferenceImage] = useState<File | null>(null)
   const [preview, setPreview] = useState('')
   const [loading, setLoading] = useState<{[k:string]:boolean}>({})
 
@@ -52,6 +57,16 @@ export default function DescriptiveBuilder() {
 
     setLoading((s)=>({...s, generate: true}));
     try {
+      const imageReference = referenceImage 
+        ? `Reference Image: Use the attached image as a style and composition reference. Analyze the visual elements, color palette, lighting, and artistic style to inform the prompt generation.`
+        : ''
+      
+      const imageGuidelines = referenceImage
+        ? `- Use the reference image to guide style, composition, and visual elements
+- Maintain consistency with the reference image's artistic approach
+- Adapt the reference style to match the specified subject and requirements`
+        : ''
+
       const compiled = DESCRIPTIVE_TEMPLATE
         .replaceAll('{{Subject}}', subject)
         .replaceAll('{{Style}}', style)
@@ -59,7 +74,9 @@ export default function DescriptiveBuilder() {
         .replaceAll('{{Lighting}}', lighting)
         .replaceAll('{{Mood}}', mood)
         .replaceAll('{{TechnicalDetails}}', technicalDetails)
+        .replaceAll('{{ImageReference}}', imageReference)
         .replaceAll('{{AdditionalContext}}', additionalContext)
+        .replaceAll('{{ImageGuidelines}}', imageGuidelines)
 
       const finalText = await polishFinalPrompt(compiled)
       setPreview(finalText)
@@ -172,6 +189,11 @@ export default function DescriptiveBuilder() {
               helpText="Any additional details or specific requirements."
               multiline
               loading={loading['Additional Context']}
+            />
+
+            <ImageUpload
+              onImageChange={setReferenceImage}
+              currentImage={referenceImage}
             />
 
             <div className="pt-4">
