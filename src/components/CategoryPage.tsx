@@ -26,7 +26,19 @@ export default function CategoryPage({
   const navigate = useNavigate()
 
   const handleTechniqueClick = (techniqueId: string) => {
-    navigate('/wizard', { state: { category: categoryId, technique: techniqueId } })
+    const builderRoutes: { [key: string]: string } = {
+      'roleplay': '/builder/roleplay',
+      'few-shot': '/builder/few-shot',
+      'structured-output': '/builder/structured-output',
+      'chain-of-thought': '/builder/chain-of-thought'
+    }
+    
+    const route = builderRoutes[techniqueId]
+    if (route) {
+      navigate(route)
+    } else {
+      navigate('/wizard', { state: { category: categoryId, technique: techniqueId } })
+    }
   }
 
   return (

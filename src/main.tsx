@@ -15,6 +15,10 @@ import Research from './pages/Research'
 import PodcastScripts from './pages/PodcastScripts'
 import Copywriting from './pages/Copywriting'
 import ImageGeneration from './pages/ImageGeneration'
+import RoleplayBuilder from './pages/RoleplayBuilder'
+import FewShotBuilder from './pages/FewShotBuilder'
+import StructuredOutputBuilder from './pages/StructuredOutputBuilder'
+import ChainOfThoughtBuilder from './pages/ChainOfThoughtBuilder'
 
 const router = createBrowserRouter([
   {
@@ -33,6 +37,10 @@ const router = createBrowserRouter([
       { path: 'podcast', element: <PodcastScripts /> },
       { path: 'copywriting', element: <Copywriting /> },
       { path: 'image', element: <ImageGeneration /> },
+      { path: 'builder/roleplay', element: <RoleplayBuilder /> },
+      { path: 'builder/few-shot', element: <FewShotBuilder /> },
+      { path: 'builder/structured-output', element: <StructuredOutputBuilder /> },
+      { path: 'builder/chain-of-thought', element: <ChainOfThoughtBuilder /> },
     ],
   },
 ])
