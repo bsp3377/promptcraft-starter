@@ -79,7 +79,7 @@ export default function Landing() {
   const navigate = useNavigate()
 
   const handleCategoryClick = (categoryId: string) => {
-    navigate('/wizard', { state: { type: categoryId } })
+    navigate(`/${categoryId}`)
   }
 
   return (
