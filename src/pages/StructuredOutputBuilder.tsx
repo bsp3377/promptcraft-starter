@@ -30,10 +30,10 @@ const OUTPUT_FORMATS = {
 
 export default function StructuredOutputBuilder() {
   const navigate = useNavigate()
-  const [role, setRole] = useState('Financial Analyst')
-  const [task, setTask] = useState('Return API response in JSON with fields: name, age, status.')
+  const [role, setRole] = useState('')
+  const [task, setTask] = useState('')
   const [outputFormat, setOutputFormat] = useState(OUTPUT_FORMATS.JSON)
-  const [inputData, setInputData] = useState('SQL database schema with tables: users(id, name, age, status), orders(id, user_id, total, created_at)')
+  const [inputData, setInputData] = useState('')
   const [preview, setPreview] = useState('')
   const [loading, setLoading] = useState(false)
   const [selectedFormat, setSelectedFormat] = useState('JSON')

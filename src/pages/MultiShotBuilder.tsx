@@ -6,256 +6,146 @@ import PreviewPanel from '../components/PreviewPanel'
 import PrimaryButton from '../components/PrimaryButton'
 import { enhanceField, polishFinalPrompt } from '../lib/gemini'
 
-const MULTI_SHOT_TEMPLATE = `Role (optional): {{Role}}
+const MULTI_SHOT_TEMPLATE = `Create image prompts using the following examples as reference:
+
 Examples:
-1) Input: "{{Example1Input}}" Output: "{{Example1Output}}"
-2) Input: "{{Example2Input}}" → Output: "{{Example2Output}}"
-3) Input: "{{Example3Input}}" → Output: "{{Example3Output}}"
-New request: "{{NewRequest}}"
-Final multi-shot prompt: "Act as a {{Role}}. Study the reference pairs and mirror their correction style (minimal edits, preserve meaning). For the new request, return only the corrected sentence and a brief rationale (<=20 words). If the input is already correct, confirm and offer one alternative phrasing. Avoid changing proper nouns or tone."`
+{{Examples}}
+
+Style Guidelines:
+{{StyleGuidelines}}
+
+Output Format:
+{{OutputFormat}}
+
+Instructions:
+- Follow the pattern and style demonstrated in the examples
+- Maintain consistency with the provided format
+- Adapt the structure to your specific needs
+- Keep the same level of detail and specificity`
 
 export default function MultiShotBuilder() {
   const navigate = useNavigate()
-  const [role, setRole] = useState('Grammar Corrector')
-  const [example1Input, setExample1Input] = useState('He go to school.')
-  const [example1Output, setExample1Output] = useState('He goes to school.')
-  const [example2Input, setExample2Input] = useState('I can has pizza?')
-  const [example2Output, setExample2Output] = useState('I can have pizza.')
-  const [example3Input, setExample3Input] = useState('He are happy.')
-  const [example3Output, setExample3Output] = useState('He is happy.')
-  const [newRequest, setNewRequest] = useState('Correct grammar in this new sentence: She don\'t like pizza.')
+  const [examples, setExamples] = useState('')
+  const [styleGuidelines, setStyleGuidelines] = useState('')
+  const [outputFormat, setOutputFormat] = useState('')
   const [preview, setPreview] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState<{[k:string]:boolean}>({})
 
-  const handleEnhance = async (fieldLabel: string, value: string, setter: (value: string) => void) => {
+  const onEnhance = async (label: string, value: string, setter: (v:string)=>void) => {
     try {
-      const improved = await enhanceField(fieldLabel, value)
-      setter(improved)
-    } catch (error) {
-      console.error('Enhancement failed:', error)
+      setLoading((s)=>({...s, [label]: true}));
+      const improved = await enhanceField(label, value);
+      setter(improved || value);
+    } finally {
+      setLoading((s)=>({...s, [label]: false}));
     }
   }
 
-  const handleGenerate = async () => {
-    if (!example1Input.trim() || !example1Output.trim() || !example2Input.trim() || !example2Output.trim()) return
+  const onGenerate = async () => {
+    if (!examples.trim() || !outputFormat.trim()) return
 
-    setLoading(true)
+    setLoading((s)=>({...s, generate: true}));
     try {
       const compiled = MULTI_SHOT_TEMPLATE
-        .replaceAll('{{Role}}', role || 'AI Assistant')
-        .replaceAll('{{Example1Input}}', example1Input)
-        .replaceAll('{{Example1Output}}', example1Output)
-        .replaceAll('{{Example2Input}}', example2Input)
-        .replaceAll('{{Example2Output}}', example2Output)
-        .replaceAll('{{Example3Input}}', example3Input)
-        .replaceAll('{{Example3Output}}', example3Output)
-        .replaceAll('{{NewRequest}}', newRequest)
-      
+        .replaceAll('{{Examples}}', examples)
+        .replaceAll('{{StyleGuidelines}}', styleGuidelines)
+        .replaceAll('{{OutputFormat}}', outputFormat)
+
       const finalText = await polishFinalPrompt(compiled)
       setPreview(finalText)
     } catch (error) {
       console.error('Generation failed:', error)
     } finally {
-      setLoading(false)
+      setLoading((s)=>({...s, generate: false}));
     }
   }
 
-  const canGenerate = example1Input.trim() && example1Output.trim() && example2Input.trim() && example2Output.trim()
+  const canGenerate = examples.trim() && outputFormat.trim()
 
   return (
-    <div className="py-12">
-      {/* Back Navigation */}
-      <div className="mb-8">
-        <button 
-          onClick={() => navigate('/image')}
-          className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back to Categories
-        </button>
-      </div>
+    <div>
+      <div className="py-12 max-w-7xl mx-auto px-4 md:px-8">
+        {/* Back Navigation */}
+        <div className="mb-8">
+          <button
+            onClick={() => navigate('/image')}
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Image Generation
+          </button>
+        </div>
 
-      {/* Header */}
-      <div className="text-center mb-12">
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-          Multi-Shot Prompt Builder
-        </h1>
-        <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-          Provide multiple input-output examples to guide the AI's response style. Enhance each example and create the final optimized prompt.
-        </p>
-      </div>
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            Multi-shot Examples Builder
+          </h1>
+          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            Create image prompts by providing 2-3 strong examples that demonstrate the style and format you want to follow.
+          </p>
+        </div>
 
-      <div className="grid lg:grid-cols-2 gap-8">
-        {/* Left: Form */}
-        <section className="space-y-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-6">Fill in the details</h2>
-          
-          <InputCard
-            label="Who should the AI act as? (Optional)"
-            placeholder="e.g., Grammar Corrector / Coding Assistant / Product Description Writer"
-            value={role}
-            onChange={setRole}
-            onEnhance={() => handleEnhance('Role', role, setRole)}
-            helpText="Set a role to anchor expertise and tone, or leave blank."
-          />
+        <div className="grid lg:grid-cols-2 gap-8">
+          {/* Left: Form */}
+          <section className="space-y-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-6">Fill in the details</h2>
 
-          <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-3">
-              <label className="font-medium text-gray-900">
-                First reference example (input → output)
-              </label>
-              <button
-                onClick={() => handleEnhance('Example 1', `${example1Input} → ${example1Output}`, (value) => {
-                  const parts = value.split(' → ')
-                  if (parts.length === 2) {
-                    setExample1Input(parts[0].trim())
-                    setExample1Output(parts[1].trim())
-                  }
-                })}
-                className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-sm font-medium hover:bg-blue-100 transition-colors"
+            <InputCard
+              label="Examples"
+              placeholder={`Example 1: "A serene mountain lake at sunset, golden hour lighting, photorealistic style, 4K resolution, peaceful atmosphere"
+
+Example 2: "Urban street scene at night, neon lights reflecting on wet pavement, cinematic lighting, high contrast, moody atmosphere"
+
+Example 3: "Close-up portrait of an elderly woman, soft natural lighting, shallow depth of field, warm color palette, intimate mood"`}
+              value={examples}
+              onChange={setExamples}
+              onEnhance={() => onEnhance('Examples', examples, setExamples)}
+              helpText="Provide 2-3 strong image prompt examples that demonstrate the style you want to follow."
+              required
+              multiline
+              loading={loading['Examples']}
+            />
+
+            <InputCard
+              label="Style Guidelines"
+              placeholder="e.g., Always include lighting description, use specific artistic styles, maintain consistent detail level"
+              value={styleGuidelines}
+              onChange={setStyleGuidelines}
+              onEnhance={() => onEnhance('Style Guidelines', styleGuidelines, setStyleGuidelines)}
+              helpText="Describe the key patterns or guidelines from your examples."
+              loading={loading['Style Guidelines']}
+            />
+
+            <InputCard
+              label="Output Format"
+              placeholder="e.g., Single detailed prompt, Multiple variations, Structured format with sections"
+              value={outputFormat}
+              onChange={setOutputFormat}
+              onEnhance={() => onEnhance('Output Format', outputFormat, setOutputFormat)}
+              helpText="Specify how you want the final prompts to be formatted."
+              required
+              loading={loading['Output Format']}
+            />
+
+            <div className="pt-4">
+              <PrimaryButton
+                onClick={onGenerate}
+                disabled={!canGenerate || loading['generate']}
+                loading={loading['generate']}
+                className="w-full"
               >
-                ✨ Enhance Example 1 with AI
-              </button>
+                ⚡ Generate Final Prompt
+              </PrimaryButton>
+              <p className="text-sm text-gray-500 mt-2 text-center">
+                You can update fields anytime before generating.
+              </p>
             </div>
-            
-            <div className="grid grid-cols-2 gap-4 mb-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Input</label>
-                <textarea
-                  value={example1Input}
-                  onChange={(e) => setExample1Input(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none resize-none"
-                  rows={2}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Output</label>
-                <textarea
-                  value={example1Output}
-                  onChange={(e) => setExample1Output(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none resize-none"
-                  rows={2}
-                />
-              </div>
-            </div>
-            
-            <p className="text-sm text-gray-500">Provide a concise before/after pair.</p>
-          </div>
+          </section>
 
-          <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-3">
-              <label className="font-medium text-gray-900">
-                Second reference example (input → output)
-              </label>
-              <button
-                onClick={() => handleEnhance('Example 2', `${example2Input} → ${example2Output}`, (value) => {
-                  const parts = value.split(' → ')
-                  if (parts.length === 2) {
-                    setExample2Input(parts[0].trim())
-                    setExample2Output(parts[1].trim())
-                  }
-                })}
-                className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-sm font-medium hover:bg-blue-100 transition-colors"
-              >
-                ✨ Enhance Example 2 with AI
-              </button>
-            </div>
-            
-            <div className="grid grid-cols-2 gap-4 mb-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Input</label>
-                <textarea
-                  value={example2Input}
-                  onChange={(e) => setExample2Input(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none resize-none"
-                  rows={2}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Output</label>
-                <textarea
-                  value={example2Output}
-                  onChange={(e) => setExample2Output(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none resize-none"
-                  rows={2}
-                />
-              </div>
-            </div>
-            
-            <p className="text-sm text-gray-500">Keep format consistent with Example 1.</p>
-          </div>
-
-          <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-3">
-              <label className="font-medium text-gray-900">
-                Third reference example (input → output) (Optional)
-              </label>
-              <button
-                onClick={() => handleEnhance('Example 3', `${example3Input} → ${example3Output}`, (value) => {
-                  const parts = value.split(' → ')
-                  if (parts.length === 2) {
-                    setExample3Input(parts[0].trim())
-                    setExample3Output(parts[1].trim())
-                  }
-                })}
-                className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-sm font-medium hover:bg-blue-100 transition-colors"
-              >
-                ✨ Enhance Example 3 with AI
-              </button>
-            </div>
-            
-            <div className="grid grid-cols-2 gap-4 mb-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Input</label>
-                <textarea
-                  value={example3Input}
-                  onChange={(e) => setExample3Input(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none resize-none"
-                  rows={2}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Output</label>
-                <textarea
-                  value={example3Output}
-                  onChange={(e) => setExample3Output(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none resize-none"
-                  rows={2}
-                />
-              </div>
-            </div>
-            
-            <p className="text-sm text-gray-500">Add a third pair to improve consistency.</p>
-          </div>
-
-          <InputCard
-            label="What should the AI do now using the examples?"
-            placeholder="e.g., Correct grammar in this new sentence: She don't like pizza."
-            value={newRequest}
-            onChange={setNewRequest}
-            onEnhance={() => handleEnhance('New Request', newRequest, setNewRequest)}
-            helpText="Describe the new task clearly; the AI will mimic the examples."
-            multiline
-            required
-          />
-
-          <div className="pt-4">
-            <PrimaryButton
-              onClick={handleGenerate}
-              disabled={!canGenerate}
-              loading={loading}
-              className="w-full"
-            >
-              ⚡ Generate Final Prompt
-            </PrimaryButton>
-            <p className="text-sm text-gray-500 mt-2 text-center">
-              You can update fields anytime before generating.
-            </p>
-          </div>
-        </section>
-
-        {/* Right: Preview */}
-        <PreviewPanel value={preview} onChange={setPreview} />
+          {/* Right: Preview */}
+          <PreviewPanel value={preview} onChange={setPreview} />
+        </div>
       </div>
     </div>
   )

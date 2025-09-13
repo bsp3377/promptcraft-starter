@@ -21,6 +21,7 @@ import StructuredOutputBuilder from './pages/StructuredOutputBuilder'
 import ChainOfThoughtBuilder from './pages/ChainOfThoughtBuilder'
 import DescriptiveBuilder from './pages/DescriptiveBuilder'
 import MultiShotBuilder from './pages/MultiShotBuilder'
+import FormatConstrainedBuilder from './pages/FormatConstrainedBuilder'
 
 const router = createBrowserRouter([
   {
@@ -45,6 +46,7 @@ const router = createBrowserRouter([
       { path: 'builder/chain-of-thought', element: <ChainOfThoughtBuilder /> },
       { path: 'builder/descriptive', element: <DescriptiveBuilder /> },
       { path: 'builder/multi-shot', element: <MultiShotBuilder /> },
+      { path: 'builder/format-constrained', element: <FormatConstrainedBuilder /> },
     ],
   },
 ])

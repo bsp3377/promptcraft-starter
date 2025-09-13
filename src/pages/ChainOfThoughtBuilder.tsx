@@ -24,9 +24,7 @@ export default function ChainOfThoughtBuilder() {
   const [role, setRole] = useState('')
   const [task, setTask] = useState('')
   const [outputFormat, setOutputFormat] = useState('1) Reasoning steps\n2) Final Answer')
-  const [scenario, setScenario] = useState(`- "I buy 2 shirts for ₹750 each and 1 pair of shoes for ₹1200. There's a 15% discount on the total. What's the final bill?"
-- "Find the roots of x² + 5x + 6 = 0."
-- "Compare two business strategies for profitability."`)
+  const [scenario, setScenario] = useState('')
   const [preview, setPreview] = useState('')
   const [loading, setLoading] = useState(false)
 
