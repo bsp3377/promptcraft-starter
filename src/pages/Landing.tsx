@@ -79,7 +79,11 @@ export default function Landing() {
   const navigate = useNavigate()
 
   const handleCategoryClick = (categoryId: string) => {
-    navigate(`/${categoryId}`)
+    if (categoryId === 'copywriting') {
+      navigate('/category/copywriting')
+    } else {
+      navigate(`/${categoryId}`)
+    }
   }
 
   return (

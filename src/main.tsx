@@ -22,6 +22,11 @@ import ChainOfThoughtBuilder from './pages/ChainOfThoughtBuilder'
 import DescriptiveBuilder from './pages/DescriptiveBuilder'
 import MultiShotBuilder from './pages/MultiShotBuilder'
 import FormatConstrainedBuilder from './pages/FormatConstrainedBuilder'
+import Copywriting from './pages/Copywriting'
+import StyleTransferBuilder from './pages/StyleTransferBuilder'
+import FewShotCopywritingBuilder from './pages/FewShotCopywritingBuilder'
+import AudienceBasedBuilder from './pages/AudienceBasedBuilder'
+import RefinementBuilder from './pages/RefinementBuilder'
 
 const router = createBrowserRouter([
   {
@@ -47,6 +52,11 @@ const router = createBrowserRouter([
       { path: 'builder/descriptive', element: <DescriptiveBuilder /> },
       { path: 'builder/multi-shot', element: <MultiShotBuilder /> },
       { path: 'builder/format-constrained', element: <FormatConstrainedBuilder /> },
+      { path: 'category/copywriting', element: <Copywriting /> },
+      { path: 'copywriting/style-transfer', element: <StyleTransferBuilder /> },
+      { path: 'copywriting/few-shot', element: <FewShotCopywritingBuilder /> },
+      { path: 'copywriting/audience-based', element: <AudienceBasedBuilder /> },
+      { path: 'copywriting/refinement', element: <RefinementBuilder /> },
     ],
   },
 ])
