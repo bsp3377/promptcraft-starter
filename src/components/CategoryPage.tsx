@@ -26,34 +26,22 @@ export default function CategoryPage({
   const navigate = useNavigate()
 
   const handleTechniqueClick = (techniqueId: string) => {
-    const globalRoutes: { [key: string]: string } = {
+    const builderRoutes: { [key: string]: string } = {
       'roleplay': '/builder/roleplay',
       'few-shot': '/builder/few-shot',
       'structured-output': '/builder/structured-output',
       'chain-of-thought': '/builder/chain-of-thought',
-      'zero-shot': '/coding/zero-shot',
-      'reflexion': '/coding/reflexion'
+      'zero-shot': '/builder/zero-shot',
+      'reflexion': '/builder/reflexion'
+    }
+    
+    // Podcast & Scripts routes are not under /builder/*; handle explicitly
+    const podcastRoutes: { [key: string]: string } = {
+      'style-transfer': '/podcast-scripts/style-transfer',
+      'creative-expansion': '/podcast-scripts/creative-expansion'
     }
 
-    let route = globalRoutes[techniqueId]
-
-    // Category-specific overrides
-    if (categoryId === 'copywriting') {
-      if (techniqueId === 'style-transfer') route = '/copywriting/style-transfer'
-      if (techniqueId === 'few-shot') route = '/copywriting/few-shot'
-      if (techniqueId === 'audience-based') route = '/copywriting/audience-based'
-      if (techniqueId === 'refinement') route = '/copywriting/refinement'
-    }
-    if (categoryId === 'podcast') {
-      if (techniqueId === 'style-transfer') route = '/podcast-scripts/style-transfer'
-      if (techniqueId === 'creative-expansion') route = '/podcast-scripts/creative-expansion'
-    }
-    if (categoryId === 'research') {
-      if (techniqueId === 'compare') route = '/research/compare'
-      if (techniqueId === 'critic-refiner') route = '/research/critic-refiner'
-      if (techniqueId === 'summarization') route = '/research/summarization'
-    }
-
+    const route = builderRoutes[techniqueId] || podcastRoutes[techniqueId]
     if (route) {
       navigate(route)
     } else {

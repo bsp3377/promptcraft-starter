@@ -9,29 +9,18 @@ import CategoryPage from '../components/CategoryPage'
 
 const techniques = [
   {
-    id: 'roleplay',
-    title: 'Roleplay Prompt',
-    description: 'Act as a podcast scriptwriter.',
-    icon: <User className="w-6 h-6" />
-  },
-  {
     id: 'style-transfer',
     title: 'Style Transfer Prompt',
-    description: 'Set tone: inspirational, fun, serious.',
+    description: 'Rewrite script or copy in a specific tone.',
     icon: <Sparkles className="w-6 h-6" />
-  },
-  {
-    id: 'few-shot',
-    title: 'Few-Shot Prompt',
-    description: 'Provide example episode scripts.',
-    icon: <FileText className="w-6 h-6" />
   },
   {
     id: 'creative-expansion',
     title: 'Creative Expansion Prompt',
-    description: 'Brainstorm 10 hooks before writing.',
+    description: 'Generate multiple creative options before final script.',
     icon: <Lightbulb className="w-6 h-6" />
-  }
+  },
+  
 ]
 
 export default function PodcastScripts() {
