@@ -1,8 +1,8 @@
 import { 
   Camera, 
-  Palette, 
-  Layers, 
-  Sparkles,
+  Square, 
+  Grid3X3, 
+  User,
   Image
 } from 'lucide-react'
 import CategoryPage from '../components/CategoryPage'
@@ -10,27 +10,27 @@ import CategoryPage from '../components/CategoryPage'
 const techniques = [
   {
     id: 'descriptive',
-    title: 'Descriptive Prompt',
-    description: 'Detailed visual descriptions and style.',
+    title: 'Descriptive Prompting',
+    description: 'Detailed visuals with style keywords.',
     icon: <Camera className="w-6 h-6" />
   },
   {
-    id: 'style-transfer',
-    title: 'Style Transfer Prompt',
-    description: 'Reference specific artists or art movements.',
-    icon: <Palette className="w-6 h-6" />
+    id: 'multi-shot',
+    title: 'Multi-shot Examples',
+    description: 'Show 2-3 strong image prompts.',
+    icon: <Square className="w-6 h-6" />
   },
   {
-    id: 'composition',
-    title: 'Composition Prompt',
-    description: 'Control lighting, angle, and framing.',
-    icon: <Layers className="w-6 h-6" />
+    id: 'format-constrained',
+    title: 'Format-constrained Prompt',
+    description: 'Define resolution, lighting, aspect ratio.',
+    icon: <Grid3X3 className="w-6 h-6" />
   },
   {
-    id: 'iterative',
-    title: 'Iterative Prompt',
-    description: 'Refine and improve through iterations.',
-    icon: <Sparkles className="w-6 h-6" />
+    id: 'role',
+    title: 'Role Prompt',
+    description: 'Act as a creative fashion photographer.',
+    icon: <User className="w-6 h-6" />
   }
 ]
 
@@ -40,7 +40,7 @@ export default function ImageGeneration() {
       categoryId="image"
       categoryName="Image Generation"
       categoryIcon={<Image className="w-4 h-4" />}
-      description="Select techniques for Midjourney, DALL·E, and Stable Diffusion to create stunning visuals."
+      description="Select a technique to craft precise image prompts for your generator of choice."
       techniques={techniques}
     />
   )

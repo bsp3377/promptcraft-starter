@@ -30,7 +30,11 @@ export default function CategoryPage({
       'roleplay': '/builder/roleplay',
       'few-shot': '/builder/few-shot',
       'structured-output': '/builder/structured-output',
-      'chain-of-thought': '/builder/chain-of-thought'
+      'chain-of-thought': '/builder/chain-of-thought',
+      'descriptive': '/builder/descriptive',
+      'multi-shot': '/builder/multi-shot',
+      'format-constrained': '/builder/structured-output',
+      'role': '/builder/roleplay'
     }
     
     const route = builderRoutes[techniqueId]

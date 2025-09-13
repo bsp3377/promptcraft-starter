@@ -19,6 +19,8 @@ import RoleplayBuilder from './pages/RoleplayBuilder'
 import FewShotBuilder from './pages/FewShotBuilder'
 import StructuredOutputBuilder from './pages/StructuredOutputBuilder'
 import ChainOfThoughtBuilder from './pages/ChainOfThoughtBuilder'
+import DescriptiveBuilder from './pages/DescriptiveBuilder'
+import MultiShotBuilder from './pages/MultiShotBuilder'
 
 const router = createBrowserRouter([
   {
@@ -41,6 +43,8 @@ const router = createBrowserRouter([
       { path: 'builder/few-shot', element: <FewShotBuilder /> },
       { path: 'builder/structured-output', element: <StructuredOutputBuilder /> },
       { path: 'builder/chain-of-thought', element: <ChainOfThoughtBuilder /> },
+      { path: 'builder/descriptive', element: <DescriptiveBuilder /> },
+      { path: 'builder/multi-shot', element: <MultiShotBuilder /> },
     ],
   },
 ])
