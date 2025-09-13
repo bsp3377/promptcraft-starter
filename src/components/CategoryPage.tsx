@@ -35,13 +35,7 @@ export default function CategoryPage({
       'reflexion': '/builder/reflexion'
     }
     
-    // Podcast & Scripts routes are not under /builder/*; handle explicitly
-    const podcastRoutes: { [key: string]: string } = {
-      'style-transfer': '/podcast-scripts/style-transfer',
-      'creative-expansion': '/podcast-scripts/creative-expansion'
-    }
-
-    const route = builderRoutes[techniqueId] || podcastRoutes[techniqueId]
+    const route = builderRoutes[techniqueId]
     if (route) {
       navigate(route)
     } else {

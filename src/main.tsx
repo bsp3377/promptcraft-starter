@@ -13,8 +13,6 @@ import ChatbotAssistant from './pages/ChatbotAssistant'
 import LearningTutors from './pages/LearningTutors'
 import Research from './pages/Research'
 import PodcastScripts from './pages/PodcastScripts'
-import StyleTransferPodcastBuilder from './pages/StyleTransferPodcastBuilder'
-import CreativeExpansionBuilder from './pages/CreativeExpansionBuilder'
 import Copywriting from './pages/Copywriting'
 import ImageGeneration from './pages/ImageGeneration'
 import RoleplayBuilder from './pages/RoleplayBuilder'
@@ -47,7 +45,6 @@ const router = createBrowserRouter([
       { path: 'learning', element: <LearningTutors /> },
       { path: 'research', element: <Research /> },
       { path: 'podcast', element: <PodcastScripts /> },
-      { path: 'category/podcast-scripts', element: <PodcastScripts /> },
       { path: 'copywriting', element: <Copywriting /> },
       { path: 'image', element: <ImageGeneration /> },
       { path: 'builder/roleplay', element: <RoleplayBuilder /> },
@@ -65,8 +62,6 @@ const router = createBrowserRouter([
       { path: 'builder/zero-shot', element: <ZeroShotBuilder /> },
       { path: 'builder/zero-shot/result', element: <ZeroShotResult /> },
       { path: 'builder/reflexion', element: <ReflexionBuilder /> },
-      { path: 'podcast-scripts/style-transfer', element: <StyleTransferPodcastBuilder /> },
-      { path: 'podcast-scripts/creative-expansion', element: <CreativeExpansionBuilder /> },
     ],
   },
 ])
