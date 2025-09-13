@@ -29,6 +29,8 @@ import RefinementBuilder from './pages/RefinementBuilder'
 import ZeroShotBuilder from './pages/ZeroShotBuilder'
 import ZeroShotResult from './pages/ZeroShotResult'
 import ReflexionBuilder from './pages/ReflexionBuilder'
+import ZeroShotCodingBuilder from './pages/ZeroShotCodingBuilder'
+import ReflexionCodingBuilder from './pages/ReflexionCodingBuilder'
 
 const router = createBrowserRouter([
   {
@@ -62,6 +64,8 @@ const router = createBrowserRouter([
       { path: 'builder/zero-shot', element: <ZeroShotBuilder /> },
       { path: 'builder/zero-shot/result', element: <ZeroShotResult /> },
       { path: 'builder/reflexion', element: <ReflexionBuilder /> },
+      { path: 'coding/zero-shot', element: <ZeroShotCodingBuilder /> },
+      { path: 'coding/reflexion', element: <ReflexionCodingBuilder /> },
     ],
   },
 ])
