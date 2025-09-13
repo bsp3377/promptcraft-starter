@@ -1,8 +1,6 @@
 import { 
   AlignLeft, 
   Scale, 
-  Brain, 
-  Grid3X3, 
   Shield,
   Search
 } from 'lucide-react'
@@ -12,31 +10,19 @@ const techniques = [
   {
     id: 'summarization',
     title: 'Summarization Prompt',
-    description: 'Condense sources into key points.',
+    description: 'Condense long text into concise summaries.',
     icon: <AlignLeft className="w-6 h-6" />
   },
   {
-    id: 'compare-contrast',
+    id: 'compare',
     title: 'Compare & Contrast Prompt',
-    description: 'List pros/cons.',
+    description: 'Highlight similarities, differences, pros/cons.',
     icon: <Scale className="w-6 h-6" />
-  },
-  {
-    id: 'chain-of-thought',
-    title: 'Chain-of-Thought Prompt',
-    description: 'Explain reasoning behind insights.',
-    icon: <Brain className="w-6 h-6" />
-  },
-  {
-    id: 'structured-output',
-    title: 'Structured Output Prompt',
-    description: 'Force tables, bullet lists.',
-    icon: <Grid3X3 className="w-6 h-6" />
   },
   {
     id: 'critic-refiner',
     title: 'Critic & Refiner Prompt',
-    description: 'Improve accuracy & reduce bias.',
+    description: 'First critique, then refine for improvement.',
     icon: <Shield className="w-6 h-6" />
   }
 ]
@@ -47,7 +33,7 @@ export default function Research() {
       categoryId="research"
       categoryName="Research"
       categoryIcon={<Search className="w-4 h-4" />}
-      description="Select a technique to analyze sources, extract insights, and structure findings efficiently."
+      description="Summarize, compare, and refine insights with clarity."
       techniques={techniques}
     />
   )

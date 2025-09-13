@@ -33,6 +33,9 @@ import ZeroShotCodingBuilder from './pages/ZeroShotCodingBuilder'
 import ReflexionCodingBuilder from './pages/ReflexionCodingBuilder'
 import StyleTransferPodcastBuilder from './pages/StyleTransferPodcastBuilder'
 import CreativeExpansionBuilder from './pages/CreativeExpansionBuilder'
+import CompareBuilder from './pages/CompareBuilder'
+import CriticRefinerBuilder from './pages/CriticRefinerBuilder'
+import SummarizationBuilder from './pages/SummarizationBuilder'
 
 const router = createBrowserRouter([
   {
@@ -71,6 +74,9 @@ const router = createBrowserRouter([
       { path: 'coding/reflexion', element: <ReflexionCodingBuilder /> },
       { path: 'podcast-scripts/style-transfer', element: <StyleTransferPodcastBuilder /> },
       { path: 'podcast-scripts/creative-expansion', element: <CreativeExpansionBuilder /> },
+      { path: 'research/compare', element: <CompareBuilder /> },
+      { path: 'research/critic-refiner', element: <CriticRefinerBuilder /> },
+      { path: 'research/summarization', element: <SummarizationBuilder /> },
     ],
   },
 ])

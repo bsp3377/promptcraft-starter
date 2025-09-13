@@ -48,6 +48,11 @@ export default function CategoryPage({
       if (techniqueId === 'style-transfer') route = '/podcast-scripts/style-transfer'
       if (techniqueId === 'creative-expansion') route = '/podcast-scripts/creative-expansion'
     }
+    if (categoryId === 'research') {
+      if (techniqueId === 'compare') route = '/research/compare'
+      if (techniqueId === 'critic-refiner') route = '/research/critic-refiner'
+      if (techniqueId === 'summarization') route = '/research/summarization'
+    }
 
     if (route) {
       navigate(route)
