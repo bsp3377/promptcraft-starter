@@ -81,6 +81,8 @@ export default function Landing() {
   const handleCategoryClick = (categoryId: string) => {
     if (categoryId === 'copywriting') {
       navigate('/category/copywriting')
+    } else if (categoryId === 'podcast') {
+      navigate('/category/podcast-scripts')
     } else {
       navigate(`/${categoryId}`)
     }
