@@ -26,7 +26,7 @@ export default function CategoryPage({
   const navigate = useNavigate()
 
   const handleTechniqueClick = (techniqueId: string) => {
-    const builderRoutes: { [key: string]: string } = {
+    const globalRoutes: { [key: string]: string } = {
       'roleplay': '/builder/roleplay',
       'few-shot': '/builder/few-shot',
       'structured-output': '/builder/structured-output',
@@ -34,8 +34,21 @@ export default function CategoryPage({
       'zero-shot': '/coding/zero-shot',
       'reflexion': '/coding/reflexion'
     }
-    
-    const route = builderRoutes[techniqueId]
+
+    let route = globalRoutes[techniqueId]
+
+    // Category-specific overrides
+    if (categoryId === 'copywriting') {
+      if (techniqueId === 'style-transfer') route = '/copywriting/style-transfer'
+      if (techniqueId === 'few-shot') route = '/copywriting/few-shot'
+      if (techniqueId === 'audience-based') route = '/copywriting/audience-based'
+      if (techniqueId === 'refinement') route = '/copywriting/refinement'
+    }
+    if (categoryId === 'podcast') {
+      if (techniqueId === 'style-transfer') route = '/podcast-scripts/style-transfer'
+      if (techniqueId === 'creative-expansion') route = '/podcast-scripts/creative-expansion'
+    }
+
     if (route) {
       navigate(route)
     } else {
