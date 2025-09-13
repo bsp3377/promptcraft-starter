@@ -26,6 +26,9 @@ import StyleTransferBuilder from './pages/StyleTransferBuilder'
 import FewShotCopywritingBuilder from './pages/FewShotCopywritingBuilder'
 import AudienceBasedBuilder from './pages/AudienceBasedBuilder'
 import RefinementBuilder from './pages/RefinementBuilder'
+import ZeroShotBuilder from './pages/ZeroShotBuilder'
+import ZeroShotResult from './pages/ZeroShotResult'
+import ReflexionBuilder from './pages/ReflexionBuilder'
 
 const router = createBrowserRouter([
   {
@@ -56,6 +59,9 @@ const router = createBrowserRouter([
       { path: 'copywriting/few-shot', element: <FewShotCopywritingBuilder /> },
       { path: 'copywriting/audience-based', element: <AudienceBasedBuilder /> },
       { path: 'copywriting/refinement', element: <RefinementBuilder /> },
+      { path: 'builder/zero-shot', element: <ZeroShotBuilder /> },
+      { path: 'builder/zero-shot/result', element: <ZeroShotResult /> },
+      { path: 'builder/reflexion', element: <ReflexionBuilder /> },
     ],
   },
 ])
