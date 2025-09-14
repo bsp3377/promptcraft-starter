@@ -38,7 +38,9 @@ export default function CategoryPage({
       'critic-refiner': '/builder/critic-refiner',
       'planning': '/builder/planning',
       'swot': '/builder/frameworks',
-      'deliberation': '/builder/deliberation'
+      'deliberation': '/builder/deliberation',
+      'open-ended': '/builder/open-ended',
+      'tree-of-thought': '/builder/tree-of-thought'
     }
     
     const route = builderRoutes[techniqueId]

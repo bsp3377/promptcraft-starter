@@ -36,6 +36,8 @@ import CriticRefinerBuilder from './pages/CriticRefinerBuilder'
 import PlanningBuilder from './pages/PlanningBuilder'
 import FrameworksBuilder from './pages/FrameworksBuilder'
 import DeliberationBuilder from './pages/DeliberationBuilder'
+import OpenEndedBuilder from './pages/OpenEndedBuilder'
+import TreeOfThoughtBuilder from './pages/TreeOfThoughtBuilder'
 import StoryboardBuilder from './pages/StoryboardBuilder'
 import CinematicBuilder from './pages/CinematicBuilder'
 import CharacterConsistencyBuilder from './pages/CharacterConsistencyBuilder'
@@ -81,6 +83,8 @@ const router = createBrowserRouter([
       { path: 'builder/planning', element: <PlanningBuilder /> },
       { path: 'builder/frameworks', element: <FrameworksBuilder /> },
       { path: 'builder/deliberation', element: <DeliberationBuilder /> },
+      { path: 'builder/open-ended', element: <OpenEndedBuilder /> },
+      { path: 'builder/tree-of-thought', element: <TreeOfThoughtBuilder /> },
       { path: 'builder/zero-shot', element: <ZeroShotBuilder /> },
       { path: 'builder/zero-shot/result', element: <ZeroShotResult /> },
       { path: 'builder/reflexion', element: <ReflexionBuilder /> },
