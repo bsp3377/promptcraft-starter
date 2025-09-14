@@ -37,7 +37,8 @@ export default function CategoryPage({
       'compare-contrast': '/builder/compare-contrast',
       'critic-refiner': '/builder/critic-refiner',
       'planning': '/builder/planning',
-      'swot': '/builder/frameworks'
+      'swot': '/builder/frameworks',
+      'deliberation': '/builder/deliberation'
     }
     
     const route = builderRoutes[techniqueId]
