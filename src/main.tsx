@@ -40,6 +40,7 @@ import OpenEndedBuilder from './pages/OpenEndedBuilder'
 import TreeOfThoughtBuilder from './pages/TreeOfThoughtBuilder'
 import RefinementWritingBuilder from './pages/RefinementWritingBuilder'
 import Browse from './pages/Browse'
+import Auth from './pages/Auth'
 import StoryboardBuilder from './pages/StoryboardBuilder'
 import CinematicBuilder from './pages/CinematicBuilder'
 import CharacterConsistencyBuilder from './pages/CharacterConsistencyBuilder'
@@ -57,6 +58,7 @@ const router = createBrowserRouter([
       { index: true, element: <Landing /> },
       { path: 'wizard', element: <Wizard /> },
       { path: 'browse', element: <Browse /> },
+      { path: 'auth', element: <Auth /> },
       { path: 'output', element: <Output /> },
       { path: 'business', element: <BusinessStrategy /> },
       { path: 'coding', element: <CodingAssistant /> },

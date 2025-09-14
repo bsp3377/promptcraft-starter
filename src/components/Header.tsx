@@ -1,6 +1,15 @@
 import { Link } from 'react-router-dom'
+import { supabase } from '../lib/supabase'
+import { useEffect, useState } from 'react'
 
 export default function Header() {
+  const [email, setEmail] = useState<string | null>(null)
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setEmail(data.user?.email ?? null))
+    const { data: sub } = supabase.auth.onAuthStateChange((_, s) => setEmail(s?.user?.email ?? null))
+    return () => { sub.subscription.unsubscribe() }
+  }, [])
+
   return (
     <header className="sticky top-0 z-50 bg-white border-b">
       <div className="max-w-7xl mx-auto flex items-center justify-between px-4 md:px-8 h-16">
@@ -13,7 +22,11 @@ export default function Header() {
         <nav className="flex items-center gap-6">
           <a href="#how-it-works" className="text-gray-700 hover:text-gray-900">How it works</a>
           <a href="#library" className="text-gray-700 hover:text-gray-900">Library</a>
-          <a href="#" className="text-gray-700 hover:text-gray-900">Sign in</a>
+          {email ? (
+            <button onClick={() => supabase.auth.signOut()} className="text-gray-700 hover:text-gray-900">Sign out ({email})</button>
+          ) : (
+            <Link to="/auth" className="text-gray-700 hover:text-gray-900">Sign in</Link>
+          )}
           <Link to="/wizard" className="inline-flex items-center rounded-full px-5 py-2.5 bg-primary-600 text-white font-medium hover:bg-primary-700 transition-colors">
             Start Now
           </Link>
