@@ -38,6 +38,7 @@ import FrameworksBuilder from './pages/FrameworksBuilder'
 import DeliberationBuilder from './pages/DeliberationBuilder'
 import OpenEndedBuilder from './pages/OpenEndedBuilder'
 import TreeOfThoughtBuilder from './pages/TreeOfThoughtBuilder'
+import RefinementWritingBuilder from './pages/RefinementWritingBuilder'
 import StoryboardBuilder from './pages/StoryboardBuilder'
 import CinematicBuilder from './pages/CinematicBuilder'
 import CharacterConsistencyBuilder from './pages/CharacterConsistencyBuilder'
@@ -85,6 +86,7 @@ const router = createBrowserRouter([
       { path: 'builder/deliberation', element: <DeliberationBuilder /> },
       { path: 'builder/open-ended', element: <OpenEndedBuilder /> },
       { path: 'builder/tree-of-thought', element: <TreeOfThoughtBuilder /> },
+      { path: 'builder/refinement-writing', element: <RefinementWritingBuilder /> },
       { path: 'builder/zero-shot', element: <ZeroShotBuilder /> },
       { path: 'builder/zero-shot/result', element: <ZeroShotResult /> },
       { path: 'builder/reflexion', element: <ReflexionBuilder /> },

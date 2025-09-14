@@ -40,7 +40,8 @@ export default function CategoryPage({
       'swot': '/builder/frameworks',
       'deliberation': '/builder/deliberation',
       'open-ended': '/builder/open-ended',
-      'tree-of-thought': '/builder/tree-of-thought'
+      'tree-of-thought': '/builder/tree-of-thought',
+      'refinement': '/builder/refinement-writing'
     }
     
     const route = builderRoutes[techniqueId]
