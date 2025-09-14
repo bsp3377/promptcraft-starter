@@ -32,7 +32,10 @@ export default function CategoryPage({
       'structured-output': '/builder/structured-output',
       'chain-of-thought': '/builder/chain-of-thought',
       'zero-shot': '/builder/zero-shot',
-      'reflexion': '/builder/reflexion'
+      'reflexion': '/builder/reflexion',
+      'summarization': '/builder/summarization',
+      'compare-contrast': '/builder/compare-contrast',
+      'critic-refiner': '/builder/critic-refiner'
     }
     
     const route = builderRoutes[techniqueId]

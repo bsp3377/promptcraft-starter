@@ -30,6 +30,9 @@ import RefinementBuilder from './pages/RefinementBuilder'
 import ZeroShotBuilder from './pages/ZeroShotBuilder'
 import ZeroShotResult from './pages/ZeroShotResult'
 import ReflexionBuilder from './pages/ReflexionBuilder'
+import SummarizationBuilder from './pages/SummarizationBuilder'
+import CompareBuilder from './pages/CompareBuilder'
+import CriticRefinerBuilder from './pages/CriticRefinerBuilder'
 import StoryboardBuilder from './pages/StoryboardBuilder'
 import CinematicBuilder from './pages/CinematicBuilder'
 import CharacterConsistencyBuilder from './pages/CharacterConsistencyBuilder'
@@ -69,6 +72,9 @@ const router = createBrowserRouter([
       { path: 'copywriting/few-shot', element: <FewShotCopywritingBuilder /> },
       { path: 'copywriting/audience-based', element: <AudienceBasedBuilder /> },
       { path: 'copywriting/refinement', element: <RefinementBuilder /> },
+      { path: 'builder/summarization', element: <SummarizationBuilder /> },
+      { path: 'builder/compare-contrast', element: <CompareBuilder /> },
+      { path: 'builder/critic-refiner', element: <CriticRefinerBuilder /> },
       { path: 'builder/zero-shot', element: <ZeroShotBuilder /> },
       { path: 'builder/zero-shot/result', element: <ZeroShotResult /> },
       { path: 'builder/reflexion', element: <ReflexionBuilder /> },
