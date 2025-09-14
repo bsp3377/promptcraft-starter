@@ -104,7 +104,7 @@ export default function Landing() {
           Choose from 20+ proven prompt styles. Beginner-friendly, powerful, and accurate.
         </p>
         <button 
-          onClick={() => navigate('/wizard')}
+          onClick={() => navigate('/browse')}
           className="inline-flex items-center gap-3 bg-primary-600 text-white px-8 py-4 rounded-full font-medium text-lg hover:bg-primary-700 transition-colors"
         >
           <span className="text-xl">✨</span>
