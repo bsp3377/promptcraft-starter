@@ -21,7 +21,8 @@ export default function Header() {
         </Link>
         <nav className="flex items-center gap-6">
           <a href="#how-it-works" className="text-gray-700 hover:text-gray-900">How it works</a>
-          <a href="#library" className="text-gray-700 hover:text-gray-900">Library</a>
+          <Link to="/templates" className="text-gray-700 hover:text-gray-900">Template Library</Link>
+          <Link to="/history" className="text-gray-700 hover:text-gray-900">History</Link>
           {email ? (
             <button onClick={() => supabase.auth.signOut()} className="text-gray-700 hover:text-gray-900">Sign out ({email})</button>
           ) : (

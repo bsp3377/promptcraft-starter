@@ -27,4 +27,22 @@ export async function savePrompt({ title, body, category, technique }: { title: 
   if (error) throw error
 }
 
+export type TemplateCard = {
+  id: string
+  title: string
+  category: string
+  tags: string[]
+  image_url: string
+  default_prompt: string
+}
+
+export async function listTemplates(): Promise<TemplateCard[]> {
+  const { data, error } = await supabase
+    .from('templates')
+    .select('id,title,category,tags,image_url,default_prompt')
+    .order('created_at', { ascending: false })
+  if (error) throw error
+  return (data || []) as TemplateCard[]
+}
+
 

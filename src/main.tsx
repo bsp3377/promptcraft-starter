@@ -49,6 +49,8 @@ import StyleLockBuilder from './pages/StyleLockBuilder'
 import TemporalConsistencyBuilder from './pages/TemporalConsistencyBuilder'
 import MotionGuidanceBuilder from './pages/MotionGuidanceBuilder'
 import RefinementVideoBuilder from './pages/RefinementVideoBuilder'
+import History from './pages/History'
+import TemplateLibrary from './pages/TemplateLibrary'
 
 const router = createBrowserRouter([
   {
@@ -59,6 +61,8 @@ const router = createBrowserRouter([
       { path: 'wizard', element: <Wizard /> },
       { path: 'browse', element: <Browse /> },
       { path: 'auth', element: <Auth /> },
+      { path: 'history', element: <History /> },
+      { path: 'templates', element: <TemplateLibrary /> },
       { path: 'output', element: <Output /> },
       { path: 'business', element: <BusinessStrategy /> },
       { path: 'coding', element: <CodingAssistant /> },

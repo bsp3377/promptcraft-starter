@@ -103,13 +103,22 @@ export default function Landing() {
         <p className="text-xl text-gray-600 max-w-2xl mx-auto">
           Choose from 20+ proven prompt styles. Beginner-friendly, powerful, and accurate.
         </p>
-        <button 
-          onClick={() => navigate('/browse')}
-          className="inline-flex items-center gap-3 bg-primary-600 text-white px-8 py-4 rounded-full font-medium text-lg hover:bg-primary-700 transition-colors"
-        >
-          <span className="text-xl">✨</span>
-          Browse Prompt Types
-        </button>
+        <div className="flex items-center justify-center gap-3">
+          <button 
+            onClick={() => navigate('/browse')}
+            className="inline-flex items-center gap-3 bg-primary-600 text-white px-8 py-4 rounded-full font-medium text-lg hover:bg-primary-700 transition-colors"
+          >
+            <span className="text-xl">✨</span>
+            Browse Prompt Types
+          </button>
+          <button 
+            onClick={() => navigate('/templates')}
+            className="inline-flex items-center gap-3 bg-gray-100 text-gray-800 px-8 py-4 rounded-full font-medium text-lg hover:bg-gray-200 transition-colors"
+          >
+            <span className="text-xl">🖼️</span>
+            Prompt Library
+          </button>
+        </div>
       </section>
 
       {/* Prompt Categories Section */}

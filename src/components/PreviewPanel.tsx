@@ -24,7 +24,9 @@ export default function PreviewPanel({ value, onChange, meta }: PreviewPanelProp
   }
 
   const handleEditAgain = () => {
-    // This keeps the textarea editable, so onChange will handle updates
+    // Re-focus the textarea so the user can continue editing immediately
+    const el = document.querySelector<HTMLTextAreaElement>('textarea[data-preview]')
+    el?.focus()
   }
 
   const handleSave = async () => {
@@ -56,6 +58,7 @@ export default function PreviewPanel({ value, onChange, meta }: PreviewPanelProp
         onChange={(e) => onChange(e.target.value)}
         placeholder="Your generated prompt will appear here after clicking 'Generate Final Prompt'. You can edit this text directly."
         className="w-full h-96 px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none resize-none font-mono text-sm"
+        data-preview
       />
       
       <div className="flex gap-3 mt-4">
