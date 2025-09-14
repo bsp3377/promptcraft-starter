@@ -33,6 +33,9 @@ import ReflexionBuilder from './pages/ReflexionBuilder'
 import SummarizationBuilder from './pages/SummarizationBuilder'
 import CompareBuilder from './pages/CompareBuilder'
 import CriticRefinerBuilder from './pages/CriticRefinerBuilder'
+import PlanningBuilder from './pages/PlanningBuilder'
+import FrameworksBuilder from './pages/FrameworksBuilder'
+import DeliberationBuilder from './pages/DeliberationBuilder'
 import StoryboardBuilder from './pages/StoryboardBuilder'
 import CinematicBuilder from './pages/CinematicBuilder'
 import CharacterConsistencyBuilder from './pages/CharacterConsistencyBuilder'
@@ -75,6 +78,9 @@ const router = createBrowserRouter([
       { path: 'builder/summarization', element: <SummarizationBuilder /> },
       { path: 'builder/compare-contrast', element: <CompareBuilder /> },
       { path: 'builder/critic-refiner', element: <CriticRefinerBuilder /> },
+      { path: 'builder/planning', element: <PlanningBuilder /> },
+      { path: 'builder/frameworks', element: <FrameworksBuilder /> },
+      { path: 'builder/deliberation', element: <DeliberationBuilder /> },
       { path: 'builder/zero-shot', element: <ZeroShotBuilder /> },
       { path: 'builder/zero-shot/result', element: <ZeroShotResult /> },
       { path: 'builder/reflexion', element: <ReflexionBuilder /> },

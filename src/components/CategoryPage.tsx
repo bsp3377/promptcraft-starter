@@ -35,7 +35,9 @@ export default function CategoryPage({
       'reflexion': '/builder/reflexion',
       'summarization': '/builder/summarization',
       'compare-contrast': '/builder/compare-contrast',
-      'critic-refiner': '/builder/critic-refiner'
+      'critic-refiner': '/builder/critic-refiner',
+      'planning': '/builder/planning',
+      'swot': '/builder/frameworks'
     }
     
     const route = builderRoutes[techniqueId]
