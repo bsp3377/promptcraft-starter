@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { listTemplates, type TemplateCard } from '../lib/supabase'
+import { Link } from 'react-router-dom'
 
 export default function TemplateLibrary() {
   const [all, setAll] = useState<TemplateCard[]>([])
@@ -22,7 +23,10 @@ export default function TemplateLibrary() {
 
   return (
     <div className="py-12 max-w-7xl mx-auto px-4 md:px-8">
-      <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">Explore Prompt Templates</h1>
+      <div className="flex items-end justify-between gap-3 mb-2">
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Explore Prompt Templates</h1>
+        <Link to="/admin/templates" className="text-sm text-gray-700 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg">Admin Upload</Link>
+      </div>
       <p className="text-gray-600 mb-6">Browse curated template images by category. Select, edit, and generate prompts instantly.</p>
 
       <div className="flex flex-wrap items-center gap-2 mb-6">

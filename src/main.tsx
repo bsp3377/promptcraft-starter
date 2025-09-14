@@ -51,6 +51,7 @@ import MotionGuidanceBuilder from './pages/MotionGuidanceBuilder'
 import RefinementVideoBuilder from './pages/RefinementVideoBuilder'
 import History from './pages/History'
 import TemplateLibrary from './pages/TemplateLibrary'
+import AdminTemplates from './pages/AdminTemplates'
 
 const router = createBrowserRouter([
   {
@@ -63,6 +64,7 @@ const router = createBrowserRouter([
       { path: 'auth', element: <Auth /> },
       { path: 'history', element: <History /> },
       { path: 'templates', element: <TemplateLibrary /> },
+      { path: 'admin/templates', element: <AdminTemplates /> },
       { path: 'output', element: <Output /> },
       { path: 'business', element: <BusinessStrategy /> },
       { path: 'coding', element: <CodingAssistant /> },
