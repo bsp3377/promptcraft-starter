@@ -15,6 +15,7 @@ import Research from './pages/Research'
 import PodcastScripts from './pages/PodcastScripts'
 import Copywriting from './pages/Copywriting'
 import ImageGeneration from './pages/ImageGeneration'
+import VideoGeneration from './pages/VideoGeneration'
 import RoleplayBuilder from './pages/RoleplayBuilder'
 import FewShotBuilder from './pages/FewShotBuilder'
 import StructuredOutputBuilder from './pages/StructuredOutputBuilder'
@@ -47,6 +48,7 @@ const router = createBrowserRouter([
       { path: 'podcast', element: <PodcastScripts /> },
       { path: 'copywriting', element: <Copywriting /> },
       { path: 'image', element: <ImageGeneration /> },
+      { path: 'video', element: <VideoGeneration /> },
       { path: 'builder/roleplay', element: <RoleplayBuilder /> },
       { path: 'builder/few-shot', element: <FewShotBuilder /> },
       { path: 'builder/structured-output', element: <StructuredOutputBuilder /> },

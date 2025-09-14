@@ -8,7 +8,8 @@ import {
   Mic, 
   Search, 
   TrendingUp, 
-  Edit3 
+  Edit3,
+  Video
 } from 'lucide-react'
 
 interface PromptCategory {
@@ -36,6 +37,12 @@ const promptCategories: PromptCategory[] = [
     title: 'Image Generation',
     description: 'Midjourney, DALL·E, Stable Diffusion',
     icon: <Image className="w-5 h-5" />
+  },
+  {
+    id: 'video',
+    title: 'Video Generation',
+    description: 'Text-to-video prompts, cinematic control',
+    icon: <Video className="w-5 h-5" />
   },
   {
     id: 'learning',
