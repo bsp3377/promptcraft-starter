@@ -30,6 +30,14 @@ import RefinementBuilder from './pages/RefinementBuilder'
 import ZeroShotBuilder from './pages/ZeroShotBuilder'
 import ZeroShotResult from './pages/ZeroShotResult'
 import ReflexionBuilder from './pages/ReflexionBuilder'
+import StoryboardBuilder from './pages/StoryboardBuilder'
+import CinematicBuilder from './pages/CinematicBuilder'
+import CharacterConsistencyBuilder from './pages/CharacterConsistencyBuilder'
+import KeyframeBuilder from './pages/KeyframeBuilder'
+import StyleLockBuilder from './pages/StyleLockBuilder'
+import TemporalConsistencyBuilder from './pages/TemporalConsistencyBuilder'
+import MotionGuidanceBuilder from './pages/MotionGuidanceBuilder'
+import RefinementVideoBuilder from './pages/RefinementVideoBuilder'
 
 const router = createBrowserRouter([
   {
@@ -64,6 +72,14 @@ const router = createBrowserRouter([
       { path: 'builder/zero-shot', element: <ZeroShotBuilder /> },
       { path: 'builder/zero-shot/result', element: <ZeroShotResult /> },
       { path: 'builder/reflexion', element: <ReflexionBuilder /> },
+      { path: 'builder/storyboard', element: <StoryboardBuilder /> },
+      { path: 'builder/cinematic', element: <CinematicBuilder /> },
+      { path: 'builder/character-consistency', element: <CharacterConsistencyBuilder /> },
+      { path: 'builder/keyframe', element: <KeyframeBuilder /> },
+      { path: 'builder/style-lock', element: <StyleLockBuilder /> },
+      { path: 'builder/temporal-consistency', element: <TemporalConsistencyBuilder /> },
+      { path: 'builder/motion-guidance', element: <MotionGuidanceBuilder /> },
+      { path: 'builder/refinement-video', element: <RefinementVideoBuilder /> },
     ],
   },
 ])

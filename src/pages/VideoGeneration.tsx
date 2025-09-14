@@ -16,7 +16,22 @@ export default function VideoGeneration() {
   const navigate = useNavigate()
 
   const handleTechniqueClick = (techniqueId: string) => {
-    navigate('/wizard', { state: { category: 'video', technique: techniqueId } })
+    const builderRoutes: { [key: string]: string } = {
+      'storyboard': '/builder/storyboard',
+      'cinematic': '/builder/cinematic',
+      'consistent-characters': '/builder/character-consistency',
+      'keyframe': '/builder/keyframe',
+      'style-lock': '/builder/style-lock',
+      'temporal-consistency': '/builder/temporal-consistency',
+      'physics-motion': '/builder/motion-guidance',
+      'refinement': '/builder/refinement-video',
+    }
+    const route = builderRoutes[techniqueId]
+    if (route) {
+      navigate(route)
+    } else {
+      navigate('/wizard', { state: { category: 'video', technique: techniqueId } })
+    }
   }
 
   return (
